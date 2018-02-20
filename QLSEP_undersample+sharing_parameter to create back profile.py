@@ -22,7 +22,7 @@ lux_B1 = []
 slot = 30
 """getting data"""
 for i in range(1,21):
-    with open("./Box 1/day%s.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 1/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot)
         for lines in fifthlines:
             tmp.append(lines)
@@ -34,7 +34,7 @@ days = len(lux_B1)
 lux_B2 = []
 
 for i in range(1,21):
-    with open("./Box 2/day%s.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 2/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot)
         for lines in fifthlines:
             tmp.append(lines)
@@ -50,7 +50,7 @@ lux_b1_int = []
 lux_b2_int = []
 min_btw_slot_intertwine = 60
 for i in range(1,21):
-    with open("./Box 1/day%s.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 1/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, min_btw_slot_intertwine)
         for lines in fifthlines:
             tmp_int.append(lines)
@@ -58,7 +58,7 @@ for i in range(1,21):
     lux_b1_int.append([float(a) for a in tmp_int])
     tmp_int = []
     
-    with open("./Box 2/day%s.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 2/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, min_btw_slot_intertwine)
         for lines in fifthlines:
             tmp_int.append(lines)
@@ -72,7 +72,7 @@ lux_b1_intt = []
 lux_b2_intt = []
 
 for i in range(1,21):
-    with open("./Box 1/day%s.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 1/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 30, None, min_btw_slot_intertwine)
         for lines in fifthlines:
             tmp_intt.append(lines)
@@ -81,7 +81,7 @@ for i in range(1,21):
     lux_b1_intt.append([float(b) for b in tmp_intt])
     tmp_intt = []
     
-    with open("./Box 2/day%s.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 2/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 30, None, min_btw_slot_intertwine)
         for lines in fifthlines:
             tmp_intt.append(lines)
