@@ -23,11 +23,11 @@ class QLSEP_node:
         self.learning_rate = learning_rate
         self.alpha = alpha
         self.N = N
-        self.EWMA_val = np.array([[float(0)]*(1440/slot/2)]*days)
-        self.QLSEP_val = np.array([[float(0)]*(1440/slot/2)]*days)
-        self.PER = np.array([float(0)]*12)
+        self.EWMA_val = np.array([[float(0)]*(1440/slot)]*days)
+        self.QLSEP_val = np.array([[float(0)]*(1440/slot)]*days)
+        self.PER = np.array([float(0)]*24)
         self.PER_list = []
-        self.PE_list = np.array([float(0)]*12)
+        self.PE_list = np.array([float(0)]*24)
         self.OPER = 1
         self.OPER_list = []
         self.P = []
@@ -35,7 +35,7 @@ class QLSEP_node:
             self.P.append(i+1)
         self.PER_previous = 0
         self.PE = 0
-        self.q_values = np.array([float(1)]*(1440/slot/2))
+        self.q_values = np.array([float(1)]*(1440/slot))
         self.checking_slot = checking_slot
         """Variables below used for sharing Q values"""
         self.contention_flag = 0
@@ -98,7 +98,7 @@ class QLSEP_node:
         
     def QLSEP_prediction(self,x,y):
         #update new OPER
-        self.OPER = np.sum(self.PER)/12
+        self.OPER = np.sum(self.PER)/24
         if(y==self.checking_slot):
             self.OPER_list.append(self.OPER)
             print self.PER
