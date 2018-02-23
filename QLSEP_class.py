@@ -16,6 +16,30 @@ def safe_div(x,y):
         return 0
     return x / y
 
+def MAPE_overall(actual,predicted,no_of_days):
+    actual_combined = []
+    predicted_combined = []
+    for i in range(no_of_days):
+        actual_tmp = [float(j) for j in actual[i]]
+        predicted_tmp = [float(j) for j in predicted[i]]
+        actual_combined += actual_tmp
+        predicted_combined += predicted_tmp
+        
+    no_light_threshold = np.amax(actual_combined)*0.05
+    
+    n = 0
+    sum_err = 0
+    
+    for i in range(len(actual_combined)):
+        if(actual_combined[i]!=0):
+            if(actual_combined[i]>no_light_threshold):
+                n += 1
+                sum_err += abs((actual_combined[i]-predicted_combined[i])/actual_combined[i])
+    
+    MAPE = sum_err*100/n
+    return [MAPE,n]
+    
+    
 
 class QLSEP_node:
     def __init__(self,learning_rate,alpha,N,slot,days,checking_slot):
@@ -98,6 +122,8 @@ class QLSEP_node:
         
     def QLSEP_prediction(self,x,y):
         #update new OPER
+        if(self.q_values[y]<-5):
+            self.q_values[y] = 0.5
         self.OPER = np.sum(self.PER)/24
         if(y==self.checking_slot):
             self.OPER_list.append(self.OPER)
