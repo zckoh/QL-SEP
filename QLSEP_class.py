@@ -49,9 +49,9 @@ class QLSEP_node:
         self.N = N
         self.EWMA_val = np.array([[float(0)]*(1440/slot)]*days)
         self.QLSEP_val = np.array([[float(0)]*(1440/slot)]*days)
-        self.PER = np.array([float(0)]*24)
+        self.PER = np.array([float(0)]*(1440/slot))
         self.PER_list = []
-        self.PE_list = np.array([float(0)]*24)
+        self.PE_list = np.array([float(0)]*(1440/slot))
         self.OPER = 1
         self.OPER_list = []
         self.P = []
@@ -75,12 +75,12 @@ class QLSEP_node:
         self.EWMA_val[x][y] = self.alpha*float(self.EWMA_val[x][y-1]) + (1-self.alpha)*float(lux)
         return self.EWMA_val[x][y]
     
-    def Calculate_PER(self,x,y,lux):
+    def Calculate_PER(self,x,y,lux,min_threshold):
         self.PER = self.PER[1:]
         self.PE_list = self.PE_list[1:]
         #find PER of the previous slot
         #if Lux is 0, no need to calculate PER (set to 0)
-        if(lux==0):
+        if(lux<=min_threshold):
             self.PER_previous = 0
             self.PE = 0
             if(y==self.checking_slot):

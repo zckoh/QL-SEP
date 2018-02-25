@@ -13,10 +13,11 @@ No sharing of parameters, use actual collected data
 import numpy as np
 import matplotlib.pyplot as plt
 import itertools
-
 from QLSEP_class import QLSEP_node,MAPE_overall
-
 np.set_printoptions(threshold=np.nan)
+
+
+
 
 def safe_div(x,y):
     if y == 0:
@@ -74,45 +75,54 @@ for x in range(len(lux_B1)):
 
 
 """calculate EWMA + QLSEP for each total slot"""
-index = 18
-
+index = 84
+plot_switch = 1
 """48 slots"""
 node48 = QLSEP_node(0.001,0.4,3,slot,days,50)
 
 for x in range(0,days):
     for y in range(0,1440/slot):
         node48.EWMA(x,y,lux_B1[x-1][y])
-        node48.Calculate_PER(x,y,lux_B1[x][y-1])
+        node48.Calculate_PER(x,y,lux_B1[x][y-1],(np.amax(lux_B1[x])*0.03))
         node48.Q_val_update(x,y)
         node48.QLSEP_prediction(x,y)
-
-
+    """
+    if(x==index):
+        print node48.q_values
+        print node48.QLSEP_val[index]
+        print node48.EWMA_val[index]
+        print "DR = "
+        print node48.QLSEP_val[index]/node48.EWMA_val[index]
+    """
 """Find MAPE(EWMA)"""
-print "MAPE(%)\t N (48 slots)"
-print MAPE_overall(lux_B1,node48.EWMA_val,days)
+print "MAPE(%%)\t N (48 slots) %s (EWMA)" % MAPE_overall(lux_B1,node48.EWMA_val,days)
+"""Find MAPE(QLSEP)"""
+print "MAPE(%%)\t N (48 slots) %s (QLSEP)\n" % MAPE_overall(lux_B1,node48.QLSEP_val,days)
 
 
-time = np.linspace(1,1440, num = 1440/slot)
-plt.figure(1)
-fig, ax = plt.subplots(figsize=(7,4))
 
-ax.plot(time,lux_B1[index],'g',label = 'Actual')
-ax.plot(time,node48.QLSEP_val[index],'r',label = 'QLSEP')
-ax.plot(time,node48.EWMA_val[index],'b',label = 'EWMA')
+if(plot_switch):
+    time = np.linspace(1,1440, num = 1440/slot)
+    plt.figure(1)
+    fig, ax = plt.subplots(figsize=(7,4))
+
+    ax.plot(time,lux_B1[index],'g',label = 'Actual')
+    ax.plot(time,node48.QLSEP_val[index],'r',label = 'QLSEP')
+    ax.plot(time,node48.EWMA_val[index],'b',label = 'EWMA')
 
 
-legend = ax.legend(loc='upper right', shadow=True)
-frame = legend.get_frame()
-frame.set_facecolor('1.0')
-for label in legend.get_texts():
-    label.set_fontsize('medium')
-for label in legend.get_lines():
-    label.set_linewidth(1.5)  # the legend line width
-plt.xlabel('Time(Hour)')
-plt.ylabel('Light Intensity (klux)')
+    legend = ax.legend(loc='upper right', shadow=True)
+    frame = legend.get_frame()
+    frame.set_facecolor('1.0')
+    for label in legend.get_texts():
+        label.set_fontsize('medium')
+    for label in legend.get_lines():
+        label.set_linewidth(1.5)  # the legend line width
+    plt.xlabel('Time(Hour)')
+    plt.ylabel('Light Intensity (klux)')
 
-plt.grid()
-plt.title('Day %s (48 slots)' % str(index+1))
+    plt.grid()
+    plt.title('Day %s (48 slots)' % str(index+1))
 
 
 
@@ -123,35 +133,40 @@ node24 = QLSEP_node(0.001,0.4,3,60,days,50)
 for x in range(0,days):
     for y in range(0,1440/60):
         node24.EWMA(x,y,lux_60min[x-1][y])
-        node24.Calculate_PER(x,y,lux_60min[x][y-1])
+        node24.Calculate_PER(x,y,lux_60min[x][y-1],(np.amax(lux_B1[x])*0.03))
         node24.Q_val_update(x,y)
         node24.QLSEP_prediction(x,y)
 
 """Find MAPE(EWMA)"""
-print "MAPE(%)\t N (24 slots)"
-print MAPE_overall(lux_60min,node24.EWMA_val,days)
-
-time = np.linspace(1,1440, num = 1440/60)
-plt.figure(1)
-fig, ax = plt.subplots(figsize=(7,4))
-
-ax.plot(time,lux_60min[index],'g',label = 'Actual')
-ax.plot(time,node24.QLSEP_val[index],'r',label = 'QLSEP')
-ax.plot(time,node24.EWMA_val[index],'b',label = 'EWMA')
+print "MAPE(%%)\t N (24 slots) %s (EWMA)"  % MAPE_overall(lux_60min,node24.EWMA_val,days)
+"""Find MAPE(QLSEP)"""
+print "MAPE(%%)\t N (24 slots) %s (QLSEP)\n"  % MAPE_overall(lux_60min,node24.QLSEP_val,days)
 
 
-legend = ax.legend(loc='upper right', shadow=True)
-frame = legend.get_frame()
-frame.set_facecolor('1.0')
-for label in legend.get_texts():
-    label.set_fontsize('medium')
-for label in legend.get_lines():
-    label.set_linewidth(1.5)  # the legend line width
-plt.xlabel('Time(Hour)')
-plt.ylabel('Light Intensity (klux)')
 
-plt.grid()
-plt.title('Day %s (24 slots)' % str(index+1))
+
+if(plot_switch):
+    time = np.linspace(1,1440, num = 1440/60)
+    plt.figure(1)
+    fig, ax = plt.subplots(figsize=(7,4))
+
+    ax.plot(time,lux_60min[index],'g',label = 'Actual')
+    ax.plot(time,node24.QLSEP_val[index],'r',label = 'QLSEP')
+    ax.plot(time,node24.EWMA_val[index],'b',label = 'EWMA')
+
+
+    legend = ax.legend(loc='upper right', shadow=True)
+    frame = legend.get_frame()
+    frame.set_facecolor('1.0')
+    for label in legend.get_texts():
+        label.set_fontsize('medium')
+    for label in legend.get_lines():
+        label.set_linewidth(1.5)  # the legend line width
+    plt.xlabel('Time(Hour)')
+    plt.ylabel('Light Intensity (klux)')
+
+    plt.grid()
+    plt.title('Day %s (24 slots)' % str(index+1))
 
 
 """16 slots"""
@@ -159,35 +174,38 @@ node16 = QLSEP_node(0.001,0.4,3,90,days,50)
 for x in range(0,days):
     for y in range(0,1440/90):
         node16.EWMA(x,y,lux_90min[x-1][y])
-        node16.Calculate_PER(x,y,lux_90min[x][y-1])
+        node16.Calculate_PER(x,y,lux_90min[x][y-1],(np.amax(lux_B1[x])*0.03))
         node16.Q_val_update(x,y)
         node16.QLSEP_prediction(x,y)
 
 """Find MAPE(EWMA)"""
-print "MAPE(%)\t N (16 slots)"
-print MAPE_overall(lux_90min,node16.EWMA_val,days)
-
-time = np.linspace(1,1440, num = 1440/90)
-plt.figure(1)
-fig, ax = plt.subplots(figsize=(7,4))
-
-ax.plot(time,lux_90min[index],'g',label = 'Actual')
-ax.plot(time,node16.QLSEP_val[index],'r',label = 'QLSEP')
-ax.plot(time,node16.EWMA_val[index],'b',label = 'EWMA')
+print "MAPE(%%)\t N (16 slots) %s (EWMA)" % MAPE_overall(lux_90min,node16.EWMA_val,days)
+"""Find MAPE(QLSEP)"""
+print "MAPE(%%)\t N (16 slots) %s (QLSEP)\n" % MAPE_overall(lux_90min,node16.QLSEP_val,days)
 
 
-legend = ax.legend(loc='upper right', shadow=True)
-frame = legend.get_frame()
-frame.set_facecolor('1.0')
-for label in legend.get_texts():
-    label.set_fontsize('medium')
-for label in legend.get_lines():
-    label.set_linewidth(1.5)  # the legend line width
-plt.xlabel('Time(Hour)')
-plt.ylabel('Light Intensity (klux)')
+if(plot_switch):
+    time = np.linspace(1,1440, num = 1440/90)
+    plt.figure(1)
+    fig, ax = plt.subplots(figsize=(7,4))
 
-plt.grid()
-plt.title('Day %s (16 slots)' % str(index+1))
+    ax.plot(time,lux_90min[index],'gx',label = 'Actual')
+    ax.plot(time,node16.QLSEP_val[index],'rx',label = 'QLSEP')
+    ax.plot(time,node16.EWMA_val[index],'bx',label = 'EWMA')
+
+
+    legend = ax.legend(loc='upper right', shadow=True)
+    frame = legend.get_frame()
+    frame.set_facecolor('1.0')
+    for label in legend.get_texts():
+        label.set_fontsize('medium')
+    for label in legend.get_lines():
+        label.set_linewidth(1.5)  # the legend line width
+    plt.xlabel('Time(Hour)')
+    plt.ylabel('Light Intensity (klux)')
+
+    plt.grid()
+    plt.title('Day %s (16 slots)' % str(index+1))
 
 
 
@@ -197,34 +215,36 @@ node12 = QLSEP_node(0.001,0.4,3,120,days,50)
 for x in range(0,days):
     for y in range(0,1440/120):
         node12.EWMA(x,y,lux_120min[x-1][y])
-        node12.Calculate_PER(x,y,lux_120min[x][y-1])
+        node12.Calculate_PER(x,y,lux_120min[x][y-1],(np.amax(lux_B1[x])*0.03))
         node12.Q_val_update(x,y)
         node12.QLSEP_prediction(x,y)
 
 """Find MAPE(EWMA)"""
-print "MAPE(%)\t N (12 slots)"
-print MAPE_overall(lux_120min,node12.EWMA_val,days)
-
-time = np.linspace(1,1440, num = 1440/120)
-plt.figure(1)
-fig, ax = plt.subplots(figsize=(7,4))
-
-ax.plot(time,lux_120min[index],'g',label = 'Actual')
-ax.plot(time,node12.QLSEP_val[index],'r',label = 'QLSEP')
-ax.plot(time,node12.EWMA_val[index],'b',label = 'EWMA')
+print "MAPE(%%)\t N (12 slots) %s  (EWMA)" % MAPE_overall(lux_120min,node12.EWMA_val,days)
+"""Find MAPE(QLSEP)"""
+print "MAPE(%%)\t N (12 slots) %s  (QLSEP)\n" % MAPE_overall(lux_120min,node12.QLSEP_val,days)
 
 
-legend = ax.legend(loc='upper right', shadow=True)
-frame = legend.get_frame()
-frame.set_facecolor('1.0')
-for label in legend.get_texts():
-    label.set_fontsize('medium')
-for label in legend.get_lines():
-    label.set_linewidth(1.5)  # the legend line width
-plt.xlabel('Time(Hour)')
-plt.ylabel('Light Intensity (klux)')
+if(plot_switch):
+    time = np.linspace(1,1440, num = 1440/120)
+    plt.figure(1)
+    fig, ax = plt.subplots(figsize=(7,4))
 
-plt.grid()
-plt.title('Day %s (12 slots)' % str(index+1))
+    ax.plot(time,lux_120min[index],'g',label = 'Actual')
+    ax.plot(time,node12.QLSEP_val[index],'r',label = 'QLSEP')
+    ax.plot(time,node12.EWMA_val[index],'b',label = 'EWMA')
 
+
+    legend = ax.legend(loc='upper right', shadow=True)
+    frame = legend.get_frame()
+    frame.set_facecolor('1.0')
+    for label in legend.get_texts():
+        label.set_fontsize('medium')
+    for label in legend.get_lines():
+        label.set_linewidth(1.5)  # the legend line width
+    plt.xlabel('Time(Hour)')
+    plt.ylabel('Light Intensity (klux)')
+
+    plt.grid()
+    plt.title('Day %s (12 slots)' % str(index+1))
 
