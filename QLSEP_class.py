@@ -75,6 +75,19 @@ class QLSEP_node:
         self.EWMA_val[x][y] = self.alpha*float(self.EWMA_val[x][y-1]) + (1-self.alpha)*float(lux)
         return self.EWMA_val[x][y]
     
+    def insert_shared_EWMA_val(self,x,y,received_value):
+        deleted = np.delete(self.EWMA_val[x],y,0)
+        self.EWMA_val = np.delete(self.EWMA_val,x,0)
+        inserted = np.insert(self.EWMA_val,x,np.insert(deleted,y,received_value,axis=0),axis=0)
+        self.EWMA_val = inserted
+    
+    def EWMA_share(self,x,y,lux,received_ewma_val):
+        #insert the received as the EWMA_val
+        print y
+        self.insert_shared_EWMA_val(x,y-1,received_ewma_val)
+        self.EWMA_val[x][y] = self.alpha*float(self.EWMA_val[x][y-1]) + (1-self.alpha)*float(lux)
+        
+        
     def Calculate_PER(self,x,y,lux,min_threshold):
         self.PER = self.PER[1:]
         self.PE_list = self.PE_list[1:]
