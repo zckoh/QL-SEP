@@ -5,6 +5,8 @@ Created on Tue Jan 02 18:05:09 2018
 @author: zckoh
 
 QLSEP model (With 2 nodes sharing)
+(Actual Data)
+
 """
 
 import numpy as np
@@ -65,7 +67,7 @@ for x in range(0,days):
 node1 = QLSEP_node(0.003,0.4,3,30,days,50)
 node2 = QLSEP_node(0.003,0.4,3,30,days,50)
 
-sharing_flag = 0
+sharing_flag = 1
 total_shared_counts = 0
 
 for x in range(0,days):
@@ -145,7 +147,7 @@ for x in range(0,days):
                         weighted_sum_node1 += node1.received_q_val[i] * node1.weights_4_neighbours[i]
                         weighted_avg_node1 = weighted_sum_node1/(1)
                 #Update that Q value
-                node1.q_values[x] = weighted_avg_node1
+                node1.q_values[y] = weighted_avg_node1
             if(node2.contention_flag):
                 """node 2"""
                 #if Q value received is empty, use original predicted q value

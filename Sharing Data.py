@@ -22,7 +22,7 @@ lux_b2_true = []
 slot_true = 1
 tmp = []
 for i in range(22,32):
-    with open("./Box 1/%s-11-17.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 1/%s-11-17.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot_true)
         for lines in fifthlines:
             tmp.append(lines)
@@ -30,7 +30,7 @@ for i in range(22,32):
     f.close()
     lux_b1_true.append([float(k) for k in tmp])
     tmp = []
-    with open("./Box 2/%s-11-17.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 2/%s-11-17.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot_true)
         for lines in fifthlines:
             tmp.append(lines)
@@ -48,7 +48,7 @@ lux_b1 = []
 lux_b2 = []
 slot = 30
 for i in range(22,32):
-    with open("./Box 1/%s-11-17.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 1/%s-11-17.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot)
         for lines in fifthlines:
             tmp.append(lines)
@@ -56,7 +56,7 @@ for i in range(22,32):
     f.close()
     lux_b1.append([float(k) for k in tmp])
     tmp = []
-    with open("./Box 2/%s-11-17.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 2/%s-11-17.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot)
         for lines in fifthlines:
             tmp.append(lines)
@@ -78,7 +78,7 @@ lux_b1_int = []
 lux_b2_int = []
 min_btw_slot_intertwine = 60
 for i in range(22,32):
-    with open("./Box 1/%s-11-17.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 1/%s-11-17.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, min_btw_slot_intertwine)
         for lines in fifthlines:
             tmp_int.append(lines)
@@ -86,7 +86,7 @@ for i in range(22,32):
     lux_b1_int.append([float(a) for a in tmp_int])
     tmp_int = []
     
-    with open("./Box 2/%s-11-17.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 2/%s-11-17.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, min_btw_slot_intertwine)
         for lines in fifthlines:
             tmp_int.append(lines)
@@ -101,7 +101,7 @@ lux_b1_intt = []
 lux_b2_intt = []
 
 for i in range(22,32):
-    with open("./Box 1/%s-11-17.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 1/%s-11-17.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 30, None, min_btw_slot_intertwine)
         for lines in fifthlines:
             tmp_intt.append(lines)
@@ -110,7 +110,7 @@ for i in range(22,32):
     lux_b1_intt.append([float(b) for b in tmp_intt])
     tmp_intt = []
     
-    with open("./Box 2/%s-11-17.txt" %i , 'r') as f:
+    with open("./highly correlated data/Box 2/%s-11-17.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 30, None, min_btw_slot_intertwine)
         for lines in fifthlines:
             tmp_intt.append(lines)

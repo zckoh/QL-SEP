@@ -151,6 +151,8 @@ class QLSEP_node:
         #calculate QLSEP value
         #print "DR = %s" % DR 
         self.QLSEP_val[x][y] = (self.EWMA_val[x][y])*(1+DR)
+        if(self.QLSEP_val[x][y]<0):
+            self.QLSEP_val[x][y]=0
 
     def receive_request(self,request,PER,address):
         self.received_PER[address] = PER
