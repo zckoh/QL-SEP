@@ -83,9 +83,8 @@ class QLSEP_node:
     
     def EWMA_share(self,x,y,lux,received_ewma_val):
         #insert the received as the EWMA_val
-        print y
-        self.insert_shared_EWMA_val(x,y-1,received_ewma_val)
-        self.EWMA_val[x][y] = self.alpha*float(self.EWMA_val[x][y-1]) + (1-self.alpha)*float(lux)
+        #self.insert_shared_EWMA_val(x,y-1,received_ewma_val)
+        self.EWMA_val[x][y] = self.alpha*float(received_ewma_val) + (1-self.alpha)*float(lux)
         
         
     def Calculate_PER(self,x,y,lux,min_threshold):
