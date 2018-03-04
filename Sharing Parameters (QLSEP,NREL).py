@@ -71,7 +71,7 @@ for x in range(0,days):
 node1 = QLSEP_node(0.003,0.4,3,30,days,50)
 node2 = QLSEP_node(0.003,0.4,3,30,days,50)
 
-
+total_average = []
 total_shared_counts = 0
 
 for x in range(0,days):
@@ -165,8 +165,11 @@ for x in range(0,days):
                     weighted_avg_node2 = weighted_sum_node2/(1)
             #Update that Q value
             node2.q_values[y] = weighted_avg_node2
-            
+    total_average.append(total_shared_counts)
 
+total_average = np.array(total_average)
+print total_average
+print total_average.mean()
 time = np.linspace(1,1440, num = 1440/slot)
 
 

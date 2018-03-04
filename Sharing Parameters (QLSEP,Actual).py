@@ -68,6 +68,7 @@ node1 = QLSEP_node(0.003,0.4,3,30,days,50)
 node2 = QLSEP_node(0.003,0.4,3,30,days,50)
 
 sharing_flag = 1
+total_average = []
 total_shared_counts = 0
 
 for x in range(0,days):
@@ -167,11 +168,13 @@ for x in range(0,days):
                 node2.q_values[y] = weighted_avg_node2
         
         sharing_flag += 1
-    #print total_shared_counts
-        #check the flag
-        #if high for that node, send request and listen request
-        #if received a high, send the q value and that PER and accept
-        
+    total_average.append(total_shared_counts)
+
+total_average = np.array(total_average)
+print total_average
+print total_average.mean()
+time = np.linspace(1,1440, num = 1440/slot)
+    
 
 time = np.linspace(1,1440, num = 1440/slot)
 
