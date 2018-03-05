@@ -48,6 +48,19 @@ class QLSEP_node:
         self.alpha = alpha
         self.N = N
         self.EWMA_val = np.array([[float(0)]*(1440/slot)]*days)
+        
+        self.EWMA_val_dynamic_a1 = np.array([[float(0)]*(1440/slot)]*days)
+        #self.EWMA_val_dynamic_a2 = np.array([[float(0)]*(1440/slot)]*days)
+        self.a1 = alpha
+        self.increment = 0.001
+        self.a2 = alpha - self.increment
+        self.dynamic_PERa1 = 0
+        self.dynamic_PERa2 = 0
+        
+        
+        
+        
+        
         self.QLSEP_val = np.array([[float(0)]*(1440/slot)]*days)
         self.PER = np.array([float(0)]*(1440/slot))
         self.PER_list = []
@@ -74,6 +87,17 @@ class QLSEP_node:
         """Predicts EWMA for 1 slot"""
         self.EWMA_val[x][y] = self.alpha*float(self.EWMA_val[x][y-1]) + (1-self.alpha)*float(lux)
         return self.EWMA_val[x][y]
+    
+    def EWMA_dynamic(self,x,y,lux):
+        """Predicts EWMA for 1 slot"""
+        self.EWMA_val[x][y] = self.a2*float(self.EWMA_val[x][y-1]) + (1-self.a2)*float(lux)
+        self.EWMA_val_dynamic_a1[x][y] = self.alpha*float(self.EWMA_val_dynamic_a1[x][y-1]) + (1-self.alpha)*float(lux)
+        return self.EWMA_val[x][y]
+    
+    def alpha_adapt(self,x,y,min_threshold,lux_previous):
+        #Calculate PER of previous slot
+        if(lux_previous<=min_threshold):
+            self.dynamic_PERa1
     
     def insert_shared_EWMA_val(self,x,y,received_value):
         deleted = np.delete(self.EWMA_val[x],y,0)
@@ -107,6 +131,7 @@ class QLSEP_node:
         #Append to the PER list
         self.PER = np.append(self.PER,self.PER_previous)
         self.PE_list = np.append(self.PE_list,self.PE)
+        return self.PER_previous
     
     def Q_val_update(self,x,y):
         if(self.PER_previous < self.OPER):

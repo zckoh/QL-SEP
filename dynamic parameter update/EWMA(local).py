@@ -64,6 +64,7 @@ alpha = 0.4
 a1 = 0.4
 increment = 0.001
 a2 = a1-increment
+"""
 for x in range(0,days):
     for y in range(0,1440/slot/2):
         #Static parameter model
@@ -103,6 +104,46 @@ for x in range(0,days):
                 a2 = a2 + increment
                 
         #print "slot = %s\tPER_a1 = %s\tPER_a2 = %s\tA1 = %s\tA2 = %s"%(y,PER_previous_a1,PER_previous_a2,a1,a2)
+"""
+for x in range(0,days):
+    for y in range(0,1440/slot/2):
+        min_threshold = np.amax(lux_B1[x])*0.03
+        if(lux_B1[x][y-1]<=min_threshold):
+            PER_previous_a1 = 0
+            PER_previous_a2 = 0
+        else: #calculate PER for previous slot
+            PER_previous_a1 = np.absolute(safe_div((lux_B1[x][y-1]-EWMA_valb1_dynamic_a1[x][y-1]),EWMA_valb1_dynamic_a1[x][y-1]))
+            PER_previous_a2 = np.absolute(safe_div((lux_B1[x][y-1]-EWMA_valb1_dynamic_a2[x][y-1]),EWMA_valb1_dynamic_a2[x][y-1]))
+
+        #Update the parameter during the day
+        if(lux_B1[x][y-1]<=min_threshold):
+            a2 = a2
+        else:
+            if(PER_previous_a1>PER_previous_a2): #Current alpha good
+                if(a2<=a1):
+                    a2 = a2 - increment
+                elif(a2>a1):
+                    a2 = a2 + increment
+
+            elif(PER_previous_a1<PER_previous_a2): #current alpha bad
+                if(a2<=a1):
+                    a2 = a2 + increment
+                elif(a2>a1):
+                    a2 = a2 - increment
+            else:
+                a2 = a2 + increment
+        #Static parameter model
+        EWMA_valb1_static[x][y] = alpha*(EWMA_valb1_static[x][y-1]) + (1-alpha)*(float(lux_B1[x-1][y]))
+        
+        #using alpha-adapt algo
+        #a1
+        EWMA_valb1_dynamic_a1[x][y] = a1*(EWMA_valb1_dynamic_a1[x][y-1]) + (1-a1)*(float(lux_B1[x-1][y]))
+        #a2
+        EWMA_valb1_dynamic_a2[x][y] = a2*(EWMA_valb1_dynamic_a2[x][y-1]) + (1-a2)*(float(lux_B1[x-1][y]))
+        
+        #calculate PER
+
+                
                 
 [mape_a2,no_a2] = MAPE_overall(lux_B1,EWMA_valb1_dynamic_a2,days)
 [mape_a1,no_a1] = MAPE_overall(lux_B1,EWMA_valb1_dynamic_a1,days)
