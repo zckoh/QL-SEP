@@ -1,51 +1,48 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Mar 02 22:03:44 2018
+Created on Tue Mar 06 15:14:31 2018
 
-Method 4: Updating the parameters (Q-value) using other node's parameter
-NREL Data (91 days)
+
+QLSEP model (With 2 nodes sharing)
+(Actual Data)
+Less Correlated Data
 
 @author: zckoh
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 import itertools
-execfile("./../QLSEP_class.py")
 np.set_printoptions(threshold=np.nan)
+execfile("./../QLSEP_class.py")
 
-index = 20
+index = 18
 
-#Get the original 48 slots data
-slot = 60
-day_counter = 1
-lux_original = []
-slot_true = 1
-lux = []
+#Importing True values collected from both boxes(Samples per Min)
 tmp = []
-with open("./../NREL_data/20160901.csv", 'r') as f:
-    fifthlines = itertools.islice(f, 0, None, slot)
-    for lines in fifthlines:
-        tmp.append(lines.split(',')[2])
-        if(day_counter == (1440/slot)):
-            day_counter = 0
-            tmp = [w.replace('\n', '') for w in tmp]
-            lux_original.append([float(i) for i in tmp])
-            tmp = []            
-        day_counter += 1
-
-days = len(lux_original)
-
-#split into 2 arrays
 lux_B1 = []
+slot = 60
+
+for i in range(1,21):
+    with open("./../Less Correlated/Box 1/day%s.txt" %i , 'r') as f:
+        fifthlines = itertools.islice(f, 0, None, slot)
+        for lines in fifthlines:
+            tmp.append(lines)
+        tmp = [w.replace('\n', '') for w in tmp]
+    lux_B1.append([float(i) for i in tmp])
+    tmp = []
+days = len(lux_B1)
+
 lux_B2 = []
-for x in range(len(lux_original)):
-    even = lux_original[x]
-    lux_B1.append(even)
-    odd = lux_original[x]
-    lux_B2.append(odd)
 
-
-
+for i in range(1,21):
+    with open("./../Less Correlated/Box 2/day%s.txt" %i , 'r') as f:
+        fifthlines = itertools.islice(f, 0, None, slot)
+        for lines in fifthlines:
+            tmp.append(lines)
+        tmp = [w.replace('\n', '') for w in tmp]
+    lux_B2.append([float(i) for i in tmp])
+    tmp = []
 
 #No sharing 
 
@@ -66,11 +63,12 @@ for x in range(0,days):
         node2_ns.QLSEP_prediction(x,y)
         
 #sharing
-
+        
 """(learning_rate, alpha, N, Min per slot, days, checking_slot)"""
 node1 = QLSEP_node(0.003,0.4,3,slot,days,50)
 node2 = QLSEP_node(0.003,0.4,3,slot,days,50)
 
+sharing_flag = 1
 total_average = []
 total_shared_counts = 0
 
@@ -100,76 +98,85 @@ for x in range(0,days):
         node2.QLSEP_prediction(x,y)
         
         
-        """Now check for contention flags"""
-        if(node1.contention_flag):
-            total_shared_counts += 1
-            """Send Request(contention_flag) + PER(PER_previous) as broadcast to that cluster"""
-            """All other nodes within cluster receives the broadcast"""
-            node2.receive_request(node1.contention_flag,node1.PER_previous,0)
-        if(node2.contention_flag):
-            node1.receive_request(node2.contention_flag,node2.PER_previous,0)
+        if(sharing_flag==1):
+            sharing_flag = 0
+            
+            """Now check for contention flags"""
+            if(node1.contention_flag):
+                total_shared_counts += 1
+                """Send Request(contention_flag) + PER(PER_previous) as broadcast to that cluster"""
+                """All other nodes within cluster receives the broadcast"""
+                node2.receive_request(node1.contention_flag,node1.PER_previous,0)
+            if(node2.contention_flag):
+                
+                node1.receive_request(node2.contention_flag,node2.PER_previous,0)
         
-        """Check/Compare PER of all the received"""
-        """If receiver better prediction than sender"""
-        if(node1.contention_flag):
-            if(node2.PER_previous < node1.PER_previous):
-                """send the Q value to the sender"""
-                node1.receive_q_val(node2.q_values[y],0)
-            else:
-                """Send a zero value to the sender"""
-                node1.receive_q_val(0,0)
-    
-        if(node2.contention_flag):
-            if(node1.PER_previous < node2.PER_previous):
-                """send the Q value to the sender"""
-                node2.receive_q_val(node1.q_values[y],0)
-            else:
-                """Send a zero value to the sender"""
-                node2.receive_q_val(0,0)
-    
-        """After all Q values have been sent and received"""
-        """Update its Q value using the weighted average"""
+            """Check/Compare PER of all the received"""
+            """If receiver better prediction than sender"""
+            if(node1.contention_flag):
+                if(node2.PER_previous < node1.PER_previous):
+                    """send the Q value to the sender"""
+                    node1.receive_q_val(node2.q_values[y],0)
+                else:
+                    """Send a zero value to the sender"""
+                    node1.receive_q_val(0,0)
+        
+            if(node2.contention_flag):
+                if(node1.PER_previous < node2.PER_previous):
+                    """send the Q value to the sender"""
+                    node2.receive_q_val(node1.q_values[y],0)
+                else:
+                    """Send a zero value to the sender"""
+                    node2.receive_q_val(0,0)
+        
+            """After all Q values have been sent and received"""
+            """Update its Q value using the weighted average"""
         
         
-        if(node1.contention_flag):
-            """node 1"""
-            #if Q value received is empty, use original predicted q value
-            if(node1.received_q_val[0] == 0):
-                node1.received_q_val[0] = node1.q_values[y]
-                #calculate weighted average
-                weighted_sum_node1 = 0
-                for i in range(len(node1.received_q_val)):
-                    weighted_sum_node1 += node1.received_q_val[i] * node1.weights_4_neighbours[i]
-                    weighted_avg_node1 = weighted_sum_node1/(1)
-            else:
-                weighted_sum_node1 = 0
-                for i in range(len(node1.received_q_val)):
-                    weighted_sum_node1 += node1.received_q_val[i] * node1.weights_4_neighbours[i]
-                    weighted_avg_node1 = weighted_sum_node1/(1)
-            #Update that Q value
-            node1.q_values[y] = weighted_avg_node1
-        if(node2.contention_flag):
-            """node 2"""
-            #if Q value received is empty, use original predicted q value
-            if(node2.received_q_val[0] == 0):
-                node2.received_q_val[0] = node2.q_values[y]
-                #calculate weighted average
-                weighted_sum_node2 = 0
-                for i in range(len(node2.received_q_val)):
-                    weighted_sum_node2 += node2.received_q_val[i] * node2.weights_4_neighbours[i]
-                    weighted_avg_node2 = weighted_sum_node2/(1)
-            else:
-                weighted_sum_node2 = 0
-                for i in range(len(node1.received_q_val)):
-                    weighted_sum_node2 += node2.received_q_val[i] * node2.weights_4_neighbours[i]
-                    weighted_avg_node2 = weighted_sum_node2/(1)
-            #Update that Q value
-            node2.q_values[y] = weighted_avg_node2
+            if(node1.contention_flag):
+                """node 1"""
+                #if Q value received is empty, use original predicted q value
+                if(node1.received_q_val[0] == 0):
+                    node1.received_q_val[0] = node1.q_values[y]
+                    #calculate weighted average
+                    weighted_sum_node1 = 0
+                    for i in range(len(node1.received_q_val)):
+                        weighted_sum_node1 += node1.received_q_val[i] * node1.weights_4_neighbours[i]
+                        weighted_avg_node1 = weighted_sum_node1/(1)
+                else:
+                    weighted_sum_node1 = 0
+                    for i in range(len(node1.received_q_val)):
+                        weighted_sum_node1 += node1.received_q_val[i] * node1.weights_4_neighbours[i]
+                        weighted_avg_node1 = weighted_sum_node1/(1)
+                #Update that Q value
+                node1.q_values[y] = weighted_avg_node1
+            if(node2.contention_flag):
+                """node 2"""
+                #if Q value received is empty, use original predicted q value
+                if(node2.received_q_val[0] == 0):
+                    node2.received_q_val[0] = node2.q_values[y]
+                    #calculate weighted average
+                    weighted_sum_node2 = 0
+                    for i in range(len(node2.received_q_val)):
+                        weighted_sum_node2 += node2.received_q_val[i] * node2.weights_4_neighbours[i]
+                        weighted_avg_node2 = weighted_sum_node2/(1)
+                else:
+                    weighted_sum_node2 = 0
+                    for i in range(len(node1.received_q_val)):
+                        weighted_sum_node2 += node2.received_q_val[i] * node2.weights_4_neighbours[i]
+                        weighted_avg_node2 = weighted_sum_node2/(1)
+                #Update that Q value
+                node2.q_values[y] = weighted_avg_node2
+        
+        sharing_flag += 1
     total_average.append(total_shared_counts)
 
 total_average = np.array(total_average)
 print total_average
 print total_average.mean()
+time = np.linspace(1,1440, num = 1440/slot)
+    
+
 time = np.linspace(1,1440, num = 1440/slot)
 
 
@@ -185,6 +192,7 @@ for label in legend.get_texts():
     label.set_fontsize('medium')
 for label in legend.get_lines():
     label.set_linewidth(1.5)  # the legend line width
+plt.ylim([0,15])
 plt.xlabel('Time(Hour)')
 plt.ylabel('Light Intensity (klux)')
 plt.grid()
@@ -202,6 +210,7 @@ for label in legend.get_texts():
     label.set_fontsize('medium')
 for label in legend.get_lines():
     label.set_linewidth(1.5)  # the legend line width
+plt.ylim([0,15])
 plt.xlabel('Time(Hour)')
 plt.ylabel('Light Intensity (klux)')
 plt.grid()
@@ -302,6 +311,7 @@ for label in legend.get_texts():
     label.set_fontsize('medium')
 for label in legend.get_lines():
     label.set_linewidth(1.5)  # the legend line width
+plt.ylim([0,30])
 plt.xlabel('Time(Hour)')
 plt.ylabel('Light Intensity (klux)')
 plt.grid()
@@ -322,7 +332,9 @@ for label in legend.get_texts():
     label.set_fontsize('medium')
 for label in legend.get_lines():
     label.set_linewidth(1.5)  # the legend line width
+plt.ylim([0,30])
 plt.xlabel('Time(Hour)')
 plt.ylabel('Light Intensity (klux)')
 plt.grid()
 plt.title('Light intensity Box 2 For 20 days')
+

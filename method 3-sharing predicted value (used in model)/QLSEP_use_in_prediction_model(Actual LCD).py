@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Mar 02 20:22:05 2018
+Created on Tue Mar 06 15:12:18 2018
+
 Method 3: Share predicton values (use it in prediction model)
 (Actual Collected Data) - 20 days
-Highly correlated data
+Less correlated data
+
+
 
 @author: zckoh
 """
-
+    
 #Get the original 48 slots data
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,7 +25,7 @@ lux_B1 = []
 slot = 30
 """getting data"""
 for i in range(1,21):
-    with open("./../highly correlated data/Box 1/day%s.txt" %i , 'r') as f:
+    with open("./../Less Correlated/Box 1/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot)
         for lines in fifthlines:
             tmp.append(lines)
@@ -34,7 +37,7 @@ days = len(lux_B1)
 lux_B2 = []
 
 for i in range(1,21):
-    with open("./../highly correlated data/Box 2/day%s.txt" %i , 'r') as f:
+    with open("./../Less Correlated/Box 2/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot)
         for lines in fifthlines:
             tmp.append(lines)

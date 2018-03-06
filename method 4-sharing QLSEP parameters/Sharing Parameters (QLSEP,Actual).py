@@ -20,7 +20,7 @@ index = 18
 #Importing True values collected from both boxes(Samples per Min)
 tmp = []
 lux_B1 = []
-slot = 30
+slot = 60
 
 for i in range(1,21):
     with open("./../highly correlated data/Box 1/day%s.txt" %i , 'r') as f:
@@ -46,8 +46,8 @@ for i in range(1,21):
 #No sharing 
 
 
-node1_ns = QLSEP_node(0.003,0.4,3,30,days,50)
-node2_ns = QLSEP_node(0.003,0.4,3,30,days,50)
+node1_ns = QLSEP_node(0.003,0.4,3,slot,days,50)
+node2_ns = QLSEP_node(0.003,0.4,3,slot,days,50)
 
 for x in range(0,days):
     for y in range(0,1440/slot):
@@ -64,8 +64,8 @@ for x in range(0,days):
 #sharing
         
 """(learning_rate, alpha, N, Min per slot, days, checking_slot)"""
-node1 = QLSEP_node(0.003,0.4,3,30,days,50)
-node2 = QLSEP_node(0.003,0.4,3,30,days,50)
+node1 = QLSEP_node(0.003,0.4,3,slot,days,50)
+node2 = QLSEP_node(0.003,0.4,3,slot,days,50)
 
 sharing_flag = 1
 total_average = []
