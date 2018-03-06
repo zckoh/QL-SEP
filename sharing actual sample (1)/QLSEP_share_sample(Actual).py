@@ -19,7 +19,7 @@ np.set_printoptions(threshold=np.nan)
 #Get the original 48 slots data
 tmp = []
 lux_B1 = []
-slot = 60
+slot = 30
 """getting data"""
 for i in range(1,21):
     with open("./../highly correlated data/Box 1/day%s.txt" %i , 'r') as f:
@@ -35,7 +35,7 @@ lux_B2 = []
 
 for i in range(1,21):
     with open("./../highly correlated data/Box 2/day%s.txt" %i , 'r') as f:
-        fifthlines = itertools.islice(f, 30, None, slot)
+        fifthlines = itertools.islice(f, 0, None, slot)
         for lines in fifthlines:
             tmp.append(lines)
         tmp = [w.replace('\n', '') for w in tmp]
@@ -44,11 +44,18 @@ for i in range(1,21):
 
 days = len(lux_B1)
 
+lux_B1_even = []
+lux_B2_odd = []
+for x in range(len(lux_B1)):
+    even = lux_B1[x][0:][::2]
+    lux_B1_even.append(even)
+    odd = lux_B2[x][1::][::2]
+    lux_B2_odd.append(odd)
+
+
 lux_shared = []
-
-
 for x in range(0,days):
-    lux_shared.append([item for pair in zip(lux_B1[x], lux_B2[x]) for item in pair])
+    lux_shared.append([item for pair in zip(lux_B1_even[x], lux_B2_odd[x]) for item in pair])
 
 
 #each node will have 48 slots as it combines 24 + 24 of sampled data
@@ -67,11 +74,11 @@ for x in range(0,days):
         node2.QLSEP_prediction(x,y)
 
 
-[mape_b1_QLSEP, no_b1_QLSEP] = MAPE_overall(lux_shared,node1.QLSEP_val,days)
-[mape_b1_EWMA, no_b1_EWMA] = MAPE_overall(lux_shared,node1.EWMA_val,days)
+[mape_b1_QLSEP, no_b1_QLSEP] = MAPE_overall(lux_B1,node1.QLSEP_val,days)
+[mape_b1_EWMA, no_b1_EWMA] = MAPE_overall(lux_B1,node1.EWMA_val,days)
 
-[mape_b2_QLSEP, no_b2_QLSEP] = MAPE_overall(lux_shared,node2.QLSEP_val,days)
-[mape_b2_EWMA, no_b2_EWMA] = MAPE_overall(lux_shared,node2.EWMA_val,days)
+[mape_b2_QLSEP, no_b2_QLSEP] = MAPE_overall(lux_B2,node2.QLSEP_val,days)
+[mape_b2_EWMA, no_b2_EWMA] = MAPE_overall(lux_B2,node2.EWMA_val,days)
 
 
 print "EWMA prediction"
