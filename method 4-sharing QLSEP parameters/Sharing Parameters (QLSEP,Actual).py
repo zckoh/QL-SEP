@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import itertools
 np.set_printoptions(threshold=np.nan)
-execfile("./QLSEP_class.py")
+execfile("./../QLSEP_class.py")
 
 index = 18
 
@@ -23,7 +23,7 @@ lux_B1 = []
 slot = 30
 
 for i in range(1,21):
-    with open("./highly correlated data/Box 1/day%s.txt" %i , 'r') as f:
+    with open("./../highly correlated data/Box 1/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot)
         for lines in fifthlines:
             tmp.append(lines)
@@ -35,7 +35,7 @@ days = len(lux_B1)
 lux_B2 = []
 
 for i in range(1,21):
-    with open("./highly correlated data/Box 2/day%s.txt" %i , 'r') as f:
+    with open("./../highly correlated data/Box 2/day%s.txt" %i , 'r') as f:
         fifthlines = itertools.islice(f, 0, None, slot)
         for lines in fifthlines:
             tmp.append(lines)

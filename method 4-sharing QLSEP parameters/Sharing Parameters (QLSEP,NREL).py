@@ -10,7 +10,7 @@ NREL Data (91 days)
 import numpy as np
 import matplotlib.pyplot as plt
 import itertools
-execfile("./QLSEP_class.py")
+execfile("./../QLSEP_class.py")
 np.set_printoptions(threshold=np.nan)
 
 index = 0
@@ -22,7 +22,7 @@ lux_original = []
 slot_true = 1
 lux = []
 tmp = []
-with open("./NREL_data/20160901.csv", 'r') as f:
+with open("./../NREL_data/20160901.csv", 'r') as f:
     fifthlines = itertools.islice(f, 0, None, slot)
     for lines in fifthlines:
         tmp.append(lines.split(',')[2])
