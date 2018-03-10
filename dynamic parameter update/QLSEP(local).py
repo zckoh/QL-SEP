@@ -55,15 +55,37 @@ for x in range(0,days):
     for y in range(0,1440/slot/2):
         
         #Node 1 uses static parameter
-        node1.EWMA(x,y,lux_B1[x-1][y])
+        node1.alpha_adapt(x,y,(np.amax(lux_B1[x])*0.03),lux_B1[x][y-1])
+        node1.EWMA_dynamic(x,y,lux_B1[x-1][y])
         node1.Calculate_PER(x,y,lux_B1[x][y-1],(np.amax(lux_B1[x])*0.03))
         node1.Q_val_update(x,y)
         node1.QLSEP_prediction(x,y)
         #Node 2 uses alpha-adapt algorithm
         #Calculate the PER of the last slot
-        node2.EWMA_dynamic(x,y,lux_B1[x-1][y])
-        PER = node2.Calculate_PER(x,y,lux_B2[x][y-1],(np.amax(lux_B1[x])*0.03))
+        node2.alpha_adapt(x,y,(np.amax(lux_B2[x])*0.03),lux_B2[x][y-1])
+        node2.EWMA_dynamic(x,y,lux_B2[x-1][y])
+        PER = node2.Calculate_PER(x,y,lux_B2[x][y-1],(np.amax(lux_B2[x])*0.03))
         node2.Q_val_update(x,y)
         node2.QLSEP_prediction(x,y)
         
-        
+
+[mape_static,no_static] = MAPE_overall(lux_B1,node1.EWMA_val,days)
+[mape_dynamic,no_dynamic] = MAPE_overall(lux_B2,node2.EWMA_val,days)
+
+
+
+print "24 slots"
+print "===================EWMA=====================\n"
+print "MAPE = %s%% , N = %s (box1)" % (mape_static,no_static)
+print "MAPE = %s%% , N = %s (box2)\n" % (mape_dynamic,no_dynamic)
+
+
+
+[mape_static,no_static] = MAPE_overall(lux_B1,node1.QLSEP_val,days)
+[mape_dynamic,no_dynamic] = MAPE_overall(lux_B2,node2.QLSEP_val,days)
+
+print "===================QLSEP=====================\n"
+print "MAPE = %s%% , N = %s (box1)" % (mape_static,no_static)
+print "MAPE = %s%% , N = %s (box2)" % (mape_dynamic,no_dynamic)
+
+

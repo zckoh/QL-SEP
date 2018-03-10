@@ -51,10 +51,10 @@ class QLSEP_node:
         
         self.EWMA_val_dynamic_a1 = np.array([[float(0)]*(1440/slot)]*days)
         #self.EWMA_val_dynamic_a2 = np.array([[float(0)]*(1440/slot)]*days)
-        self.a1 = alpha
+        #self.a1 = alpha
         self.increment = 0.001
         self.a2 = alpha - self.increment
-        self.dynamic_PERa1 = 0
+        self.dynamic_PERa = 0
         self.dynamic_PERa2 = 0
         
         
@@ -97,7 +97,30 @@ class QLSEP_node:
     def alpha_adapt(self,x,y,min_threshold,lux_previous):
         #Calculate PER of previous slot
         if(lux_previous<=min_threshold):
-            self.dynamic_PERa1
+            self.dynamic_PERa = 0
+            self.dynamic_PERa2 = 0
+        else:
+            self.dynamic_PERa = np.absolute(safe_div((lux_previous-self.EWMA_val_dynamic_a1[x][y-1]),self.EWMA_val_dynamic_a1[x][y-1]))
+            self.dynamic_PERa2 = np.absolute(safe_div((lux_previous-self.EWMA_val[x][y-1]),self.EWMA_val[x][y-1]))
+        
+        #Update the parameter during the day
+        if(lux_previous>min_threshold):
+            if(self.dynamic_PERa > self.dynamic_PERa2): #Dynamic alpha is good
+                if(self.a2 <= self.alpha):
+                    self.a2 = self.a2 - self.increment
+                elif(self.a2 > self.alpha):
+                    self.a2 = self.a2 + self.increment
+            elif(self.dynamic_PERa < self.dynamic_PERa2): #dynamic alpha is getting bad
+                if(self.a2 <= self.alpha):
+                    self.a2 = self.a2 + self.increment
+                elif(self.a2 > self.alpha):
+                    self.a2 = self.a2 - self.increment
+            else:
+                self.a2 = self.a2 + self.increment
+        else:
+            self.a2 = self.a2
+                
+
     
     def insert_shared_EWMA_val(self,x,y,received_value):
         deleted = np.delete(self.EWMA_val[x],y,0)
