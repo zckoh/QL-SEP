@@ -115,9 +115,10 @@ time24 = np.linspace(1,1440, num = 1440/slot/2)
 index = 79  
 plt.figure(1)
 fig, ax = plt.subplots(figsize=(7.5,4))
-ax.plot(time48,lux_original[index],'g',label = 'Actual (48 slots)')
-ax.plot(time48 ,QLSEP_val_shared[index],'r',label = 'shared')
-ax.plot(time48,node_original.QLSEP_val[index],'b',label = 'original')
+ax.plot(time24,lux_B1[index],'gx',label = 'Actual (48 slots)')
+#ax.plot(time48 ,QLSEP_val_shared[index],'r',label = 'shared')
+#ax.plot(time48,node_original.QLSEP_val[index],'b',label = 'original')
+
 
 legend = ax.legend(loc='upper right', shadow=True)
 frame = legend.get_frame()
@@ -126,8 +127,12 @@ for label in legend.get_texts():
     label.set_fontsize('medium')
 for label in legend.get_lines():
     label.set_linewidth(1.5)  # the legend line width
+
 plt.xlabel('Time(Min)')
+
 plt.ylabel('Light Intensity (klux)')
 plt.title('Box day %s (NREL data)' % str(index+1))
 plt.grid()
+plt.savefig('sample.png', dpi = 600)
 plt.show()
+

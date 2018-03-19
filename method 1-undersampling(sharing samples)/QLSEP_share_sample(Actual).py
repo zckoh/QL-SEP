@@ -59,10 +59,11 @@ for x in range(0,days):
 
 
 #each node will have 48 slots as it combines 24 + 24 of sampled data
-node1 = QLSEP_node(0.003,0.4,3,30,days,50)
-node2 = QLSEP_node(0.003,0.4,3,30,days,50)
+node1 = QLSEP_node(0.003,0.4,3,slot,days,50)
+node2 = QLSEP_node(0.003,0.4,3,slot,days,50)
 for x in range(0,days):
-    for y in range(0,1440/30):
+    print node1.q_values
+    for y in range(0,1440/slot):
         node1.EWMA(x,y,lux_shared[x-1][y])
         node1.Calculate_PER(x,y,lux_shared[x][y-1],(np.amax(lux_shared[x])*0.03))
         node1.Q_val_update(x,y)

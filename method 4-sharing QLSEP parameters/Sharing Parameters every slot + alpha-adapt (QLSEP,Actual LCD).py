@@ -72,7 +72,7 @@ for x in range(0,days):
         node2.QLSEP_prediction(x,y)
         
         #Node 2 share to node 1
-        node1.q_values[y] = 0.3*node1.q_values[y] + 0.7*node2.q_values[y]
+        #node1.q_values[y] = 0.3*node1.q_values[y] + 0.7*node2.q_values[y]
         if(y==12):
             n1_q_val.append(node1.q_values[y])
             n2_q_val.append(node2.q_values[y])
