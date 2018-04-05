@@ -54,7 +54,6 @@ node2 = QLSEP_node(0.003,0.4,3,slot,days,50)
 n1_alpha = []
 n2_alpha = []
 
-
 for x in range(0,days):
     for y in range(0,1440/slot):
         #Node1 updates its alpha & predicts for next slot
@@ -62,6 +61,7 @@ for x in range(0,days):
         
         #now share to node 1 and find the change in prediction
         node1.a2 = 0.5*node2.a2 + 0.5*node1.a2
+
         node1.EWMA_dynamic(x,y,lux_B1[x-1][y])
         n1_alpha.append(node1.a2)
         n2_alpha.append(node2.a2)

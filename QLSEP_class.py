@@ -40,6 +40,21 @@ def MAPE_overall(actual,predicted,no_of_days):
     return [MAPE,n]
     
     
+def MAPE_oneday(actual,predicted):        
+    no_light_threshold = np.amax(actual)*0.05
+    
+    n = 0
+    sum_err = 0
+    
+    for i in range(len(actual)):
+        if(actual[i]!=0):
+            if(actual[i]>no_light_threshold):
+                n += 1
+                sum_err += abs((actual[i]-predicted[i])/actual[i])
+    
+    MAPE = sum_err*100/n
+    return MAPE
+    
 
 class QLSEP_node:
     def __init__(self,learning_rate,alpha,N,slot,days,checking_slot):
@@ -91,6 +106,12 @@ class QLSEP_node:
     def EWMA_dynamic(self,x,y,lux):
         """Predicts EWMA for 1 slot"""
         self.EWMA_val[x][y] = self.a2*float(self.EWMA_val[x][y-1]) + (1-self.a2)*float(lux)
+        self.EWMA_val_dynamic_a1[x][y] = self.alpha*float(self.EWMA_val_dynamic_a1[x][y-1]) + (1-self.alpha)*float(lux)
+        return self.EWMA_val[x][y]
+    
+    def EWMA_dynamic_and_share(self,x,y,lux,received_ewma_val):
+        """Method 2 + 6"""
+        self.EWMA_val[x][y] = self.a2*float(received_ewma_val) + (1-self.a2)*float(lux)
         self.EWMA_val_dynamic_a1[x][y] = self.alpha*float(self.EWMA_val_dynamic_a1[x][y-1]) + (1-self.alpha)*float(lux)
         return self.EWMA_val[x][y]
     
