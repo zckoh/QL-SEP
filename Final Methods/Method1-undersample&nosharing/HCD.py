@@ -107,7 +107,7 @@ plt.figure(1)
 fig, ax = plt.subplots(figsize=(7.5,4))
 ax.plot(totalslots,difference,'r',label='node1')
 #ax.plot(totalslots,n2_mape_lst,'b',label= 'node2')
-
+legend = ax.legend(loc='upper right', shadow=True)
 frame = legend.get_frame()
 frame.set_facecolor('1.0')
 for label in legend.get_texts():

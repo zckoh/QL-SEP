@@ -62,6 +62,9 @@ for x in range(0,days):
 [mape_b2_QLSEP, no_b2_QLSEP] = MAPE_overall(lux_B2,node2.QLSEP_val,days)
 [mape_b2_EWMA, no_b2_EWMA] = MAPE_overall(lux_B2,node2.EWMA_val,days)
 
+print "==================================="
+print "METHOD 3 - Sharing Predicted Values (NREL)"
+print "===================================\n"
 
 print "EWMA prediction"
 print "MAPE = %s%% , N = %s (Box 1)" % (mape_b1_EWMA,no_b1_EWMA)
