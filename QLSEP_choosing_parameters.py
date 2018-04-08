@@ -54,9 +54,11 @@ for k in range(0,len(learning_rate_lst)):
             node1.QLSEP_prediction(x,y)
         
         
-    node1.QLSEP_val = node1.QLSEP_val[1:]
-    lux_original = lux_original[1:]
-    days = days-1
+#==============================================================================
+#     node1.QLSEP_val = node1.QLSEP_val[1:]
+#     lux_original = lux_original[1:]
+#     days = days-1
+#==============================================================================
 
     """calculate MAPE"""
     [mape,no] = MAPE_overall(lux_original,node1.QLSEP_val,days)

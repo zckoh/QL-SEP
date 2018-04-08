@@ -212,7 +212,7 @@ class QLSEP_node:
         sum_dot = 0
 
         for i in range(1,self.N+1):
-            dot = self.PE_list[-(i)]*(self.q_values[y+1-i])*self.P[-i]
+            dot = self.PE_list[-(i)]*(self.q_values[y-i])*self.P[-i]
             sum_dot += dot
         #calculate DR - average of energy increase/decrease ratio
         #print sum_dot
