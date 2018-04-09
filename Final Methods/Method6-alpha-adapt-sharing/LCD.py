@@ -57,8 +57,8 @@ node2 = QLSEP_node(0.001,0.1,3,60,days,50)
 n1_alpha = []
 n2_alpha = []
 
-param = 0.3
-max_weightage = 0.8
+C = 0.1
+W = 1.0
 
 
 for x in range(0,days):
@@ -76,12 +76,12 @@ for x in range(0,days):
         node2.Q_val_update(x,y)
         node2.QLSEP_prediction(x,y)
         
-        ratio = param*safe_div(node1.PER_previous,node2.PER_previous)
-        if(ratio>max_weightage):
-            ratio = max_weightage
+        ratio = C*safe_div(node1.PER_previous,node2.PER_previous)
+        if(ratio>W):
+            ratio = W
         elif(ratio<0):
             ratio=0
-        node1.a2=(max_weightage-ratio)*node2.a2+((1-max_weightage)+ratio)*node1.a2
+        node1.a2=(W-ratio)*node2.a2+((1-W)+ratio)*node1.a2
 
         node1.EWMA_dynamic(x,y,lux_B1_even[x-1][y])
         node1.Q_val_update(x,y)

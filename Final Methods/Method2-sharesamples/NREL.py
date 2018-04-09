@@ -53,7 +53,7 @@ for x in range(0,days):
         node1.Q_val_update(x,y)
         node1.QLSEP_prediction(x,y)
         
-        node2.EWMA_share(x,y,lux_B2[x-1][y],lux_B1[x][y])
+        node2.EWMA(x,y,lux_B2[x-1][y])
         node2.Calculate_PER(x,y,lux_B2[x][y-1],(np.amax(lux_B2[x])*0.03))
         node2.Q_val_update(x,y)
         node2.QLSEP_prediction(x,y)

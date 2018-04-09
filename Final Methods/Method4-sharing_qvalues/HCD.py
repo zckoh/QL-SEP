@@ -55,50 +55,42 @@ for x in range(len(lux_B1)):
     
 
 
-param = 0.3
+C = 0.2
+W = 1.0
 
+node1 = QLSEP_node(0.001,0.1,3,60,days,50)
+node2 = QLSEP_node(0.001,0.1,3,60,days,50)
 
-m_w_lst = np.linspace(0,1, num = 11)
-MAPE_QLSEP_lst = []
-
-
-for k in range(len(m_w_lst)):
-    max_weightage = m_w_lst[k]
-    node1 = QLSEP_node(0.001,0.1,3,60,days,50)
-    node2 = QLSEP_node(0.001,0.1,3,60,days,50)
-    for x in range(0,days):
-        for y in range(0,1440/60):        
-            node1.EWMA(x,y,lux_B1_even[x-1][y])
-            node1.Calculate_PER(x,y,lux_B1_even[x][y-1],(np.amax(lux_B1_even[x])*0.03))
-            node1.Q_val_update(x,y)
+for x in range(0,days):
+    for y in range(0,1440/60):        
+        node1.EWMA(x,y,lux_B1_even[x-1][y])
+        node1.Calculate_PER(x,y,lux_B1_even[x][y-1],(np.amax(lux_B1_even[x])*0.03))
+        node1.Q_val_update(x,y)
+        
+        node2.EWMA(x,y,lux_B2_odd[x-1][y])
+        node2.Calculate_PER(x,y,lux_B2_odd[x][y-1],(np.amax(lux_B2_odd[x])*0.03))
+        node2.Q_val_update(x,y)
+        node2.QLSEP_prediction(x,y)
+        
+        """Now node 2 sends node 1 (PER_previous and the updated Q-val)"""
+        """now target node checks the PER"""
+        """if node2's PER > target node's PER"""
+        ratio = C*safe_div(node1.PER_previous,node2.PER_previous)
+        if(ratio>W):
+            ratio = W
+        elif(ratio<0):
+            ratio=0
+        node1.q_values[y]=(W-ratio)*node2.q_values[y]+((1-W)+ratio)*node1.q_values[y]
+        #node1.q_values[y]=0.5*node1.q_values[y] + 0.5*node2.q_values[y]
+        node1.QLSEP_prediction(x,y)
 
         
-            node2.EWMA(x,y,lux_B2_odd[x-1][y])
-            node2.Calculate_PER(x,y,lux_B2_odd[x][y-1],(np.amax(lux_B2_odd[x])*0.03))
-            node2.Q_val_update(x,y)
-            node2.QLSEP_prediction(x,y)
-        
-            """Now node 2 sends node 1 (PER_previous and the updated Q-val)"""
-            """now target node checks the PER"""
-            """if node2's PER > target node's PER"""
-            ratio = param*safe_div(node1.PER_previous,node2.PER_previous)
-            if(ratio>max_weightage):
-                ratio = max_weightage
-            elif(ratio<0):
-                ratio=0
-            node1.q_values[y]=(max_weightage-ratio)*node2.q_values[y]+((1-max_weightage)+ratio)*node1.q_values[y]
-            #node1.q_values[y]=0.5*node1.q_values[y] + 0.5*node2.q_values[y]
-            node1.QLSEP_prediction(x,y)
+[mape_b1_QLSEP, no_b1_QLSEP] = MAPE_overall(lux_B1_even,node1.QLSEP_val,days)
+[mape_b1_EWMA, no_b1_EWMA] = MAPE_overall(lux_B1_even,node1.EWMA_val,days)
 
-        
-    [mape_b1_QLSEP, no_b1_QLSEP] = MAPE_overall(lux_B1_even,node1.QLSEP_val,days)
-    [mape_b1_EWMA, no_b1_EWMA] = MAPE_overall(lux_B1_even,node1.EWMA_val,days)
-
-    [mape_b2_QLSEP, no_b2_QLSEP] = MAPE_overall(lux_B2_odd,node2.QLSEP_val,days)
-    [mape_b2_EWMA, no_b2_EWMA] = MAPE_overall(lux_B2_odd,node2.EWMA_val,days)
+[mape_b2_QLSEP, no_b2_QLSEP] = MAPE_overall(lux_B2_odd,node2.QLSEP_val,days)
+[mape_b2_EWMA, no_b2_EWMA] = MAPE_overall(lux_B2_odd,node2.EWMA_val,days)
     
-    MAPE_QLSEP_lst.append(mape_b1_QLSEP)
-
 print "==================================="
 print "METHOD 4 - Sharing Q-values (HCD)"
 print "===================================\n"
@@ -111,21 +103,4 @@ print "QLSEP prediction"
 print "MAPE = %s%% , N = %s (Box 1)" % (mape_b1_QLSEP,no_b1_QLSEP)
 print "MAPE = %s%% , N = %s (Box 2)" % (mape_b2_QLSEP,no_b2_QLSEP)
 
-
-
-plt.figure(1)
-fig, ax = plt.subplots(figsize=(7,4))
-ax.plot(m_w_lst,MAPE_QLSEP_lst,'b',label= 'QLSEP')
-
-legend = ax.legend(loc='upper right', shadow=True)
-frame = legend.get_frame()
-frame.set_facecolor('1.0')
-for label in legend.get_texts():
-    label.set_fontsize('medium')
-for label in legend.get_lines():
-    label.set_linewidth(1.5)  # the legend line width
-plt.xlabel('max weightage')
-plt.ylabel('MAPE (%)')
-plt.grid()
-plt.title(r'How MAPE varies w.r.t max weightage')
 
