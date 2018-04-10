@@ -109,27 +109,30 @@ print "MAPE = %s%% , N = %s (Box 1)" % (mape_b1_QLSEP,no_b1_QLSEP)
 print "MAPE = %s%% , N = %s (Box 2)" % (mape_b2_QLSEP,no_b2_QLSEP)
 
 
+print "Index = 17"
+print node1.QLSEP_val[17]
 
-
-time48 = np.linspace(1,1440, num = 1440/slot)
-time24 = np.linspace(1,1440, num = 1440/slot/2)
-
-index = 10
-plt.figure(1)
-fig, ax = plt.subplots(figsize=(7.5,4))
-ax.plot(time24,lux_B1_even[index],'g',label = 'Actual')
-ax.plot(time24,node1.EWMA_val[index],'r',label = 'EWMA')
-ax.plot(time24,node1.QLSEP_val[index],'b',label = 'QLSEP')
-legend = ax.legend(loc='upper right', shadow=True)
-frame = legend.get_frame()
-frame.set_facecolor('1.0')
-for label in legend.get_texts():
-    label.set_fontsize('medium')
-for label in legend.get_lines():
-    label.set_linewidth(1.5)  # the legend line width
-
-plt.xlabel('Time(Min)')
-plt.ylabel('Light Intensity (klux)')
-plt.title('Target Node - day %s (HCD data)' % str(index+1))
-plt.grid()
-plt.show()
+# =============================================================================
+# time48 = np.linspace(1,1440, num = 1440/slot)
+# time24 = np.linspace(1,1440, num = 1440/slot/2)
+# 
+# index = 10
+# plt.figure(1)
+# fig, ax = plt.subplots(figsize=(7.5,4))
+# ax.plot(time24,lux_B1_even[index],'g',label = 'Actual')
+# ax.plot(time24,node1.EWMA_val[index],'r',label = 'EWMA')
+# ax.plot(time24,node1.QLSEP_val[index],'b',label = 'QLSEP')
+# legend = ax.legend(loc='upper right', shadow=True)
+# frame = legend.get_frame()
+# frame.set_facecolor('1.0')
+# for label in legend.get_texts():
+#     label.set_fontsize('medium')
+# for label in legend.get_lines():
+#     label.set_linewidth(1.5)  # the legend line width
+# 
+# plt.xlabel('Time(Min)')
+# plt.ylabel('Light Intensity (klux)')
+# plt.title('Target Node - day %s (HCD data)' % str(index+1))
+# plt.grid()
+# plt.show()
+# =============================================================================

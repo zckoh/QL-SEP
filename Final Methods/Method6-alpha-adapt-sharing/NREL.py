@@ -99,6 +99,9 @@ print "QLSEP prediction"
 print "MAPE = %s%% , N = %s (Box 1)" % (mape_b1_QLSEP,no_b1_QLSEP)
 print "MAPE = %s%% , N = %s (Box 2)" % (mape_b2_QLSEP,no_b2_QLSEP)
 
+print "Index = 29"
+print node1.QLSEP_val[29]
+
 #==============================================================================
 # time = np.linspace(1,1440*days, num = 1440*days/60)
 # 

@@ -104,3 +104,30 @@ print "MAPE = %s%% , N = %s (Box 1)" % (mape_b1_QLSEP,no_b1_QLSEP)
 print "MAPE = %s%% , N = %s (Box 2)" % (mape_b2_QLSEP,no_b2_QLSEP)
 
 
+print "Index = 17"
+print node1.QLSEP_val[17]
+
+# =============================================================================
+# 
+# index = 17
+# 
+# time24 = np.linspace(0,1440,num=1440/slot/2)
+# 
+# plt.figure(1)
+# fig, ax = plt.subplots(figsize=(7,4))
+# ax.plot(time24,lux_B1_even[index],'g',label= 'Actual')
+# ax.plot(time24,node1.QLSEP_val[index],'b',label= 'QLSEP')
+# 
+# 
+# legend = ax.legend(loc='upper right', shadow=True)
+# frame = legend.get_frame()
+# frame.set_facecolor('1.0')
+# for label in legend.get_texts():
+#     label.set_fontsize('medium')
+# for label in legend.get_lines():
+#     label.set_linewidth(1.5)  # the legend line width
+# plt.ylabel('Light Intensity (klux)')
+# plt.xlabel('time (min)')
+# plt.grid()
+# =============================================================================
+
