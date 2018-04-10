@@ -41,7 +41,7 @@ plt.ylabel('Overall MAPE (%)')
 plt.ylim(40,70)
 #plt.title('Performance of EWMA on NREL dataset with different methods')
 plt.grid()
-plt.savefig('MAPE_EWMA_NREL_7methods.png', dpi = 600)
+plt.savefig('MAPE_EWMA_NREL_7methods.png', dpi = 200)
 plt.show()
 
 EWMA_change_same_NREL = []
@@ -70,7 +70,7 @@ plt.ylabel('MAPE increase/decrease (%)')
 plt.ylim(-5,5)
 #plt.title('MAPE increase/decrease from baseline (EWMA-NREL)')
 plt.grid()
-plt.savefig('MAPE_EWMA_NREL_7methods_inc_dec.png', dpi = 600)
+plt.savefig('MAPE_EWMA_NREL_7methods_inc_dec.png', dpi = 200)
 plt.show()
 
 
@@ -97,7 +97,7 @@ plt.ylabel('Overall MAPE (%)')
 plt.ylim(40,70)
 #plt.title('Performance of QLSEP on NREL dataset with different methods')
 plt.grid()
-plt.savefig('MAPE_QLSEP_NREL_7methods.png', dpi = 600)
+plt.savefig('MAPE_QLSEP_NREL_7methods.png', dpi = 200)
 plt.show()
 
 QLSEP_change_same_NREL = []
@@ -126,7 +126,7 @@ plt.ylabel('MAPE increase/decrease (%)')
 plt.ylim(-5,5)
 #plt.title('MAPE increase/decrease from baseline (QLSEP-NREL)')
 plt.grid()
-plt.savefig('MAPE_QLSEP_NREL_7methods_inc_dec.png', dpi = 600)
+plt.savefig('MAPE_QLSEP_NREL_7methods_inc_dec.png', dpi = 200)
 plt.show()
 
 
@@ -159,7 +159,7 @@ plt.ylabel('Overall MAPE (%)')
 plt.ylim(40,70)
 #plt.title('Performance of EWMA on HCD dataset with different methods')
 plt.grid()
-plt.savefig('MAPE_EWMA_HCD_7methods.png', dpi = 600)
+plt.savefig('MAPE_EWMA_HCD_7methods.png', dpi = 200)
 plt.show()
 
 
@@ -189,7 +189,7 @@ plt.ylabel('MAPE increase/decrease (%)')
 plt.ylim(-5,5)
 #plt.title('MAPE increase/decrease from baseline (EWMA-HCD)')
 plt.grid()
-plt.savefig('MAPE_EWMA_HCD_7methods_inc_dec.png', dpi = 600)
+plt.savefig('MAPE_EWMA_HCD_7methods_inc_dec.png', dpi = 200)
 plt.show()
 
 
@@ -215,7 +215,7 @@ plt.ylabel('Overall MAPE (%)')
 plt.ylim(40,70)
 #plt.title('Performance of QLSEP on HCD dataset with different methods')
 plt.grid()
-plt.savefig('MAPE_QLSEP_HCD_7methods.png', dpi = 600)
+plt.savefig('MAPE_QLSEP_HCD_7methods.png', dpi = 200)
 plt.show()
 
 QLSEP_change_same_HCD = []
@@ -244,7 +244,7 @@ plt.ylabel('MAPE increase/decrease (%)')
 plt.ylim(-5,5)
 #plt.title('MAPE increase/decrease from baseline (QLSEP-HCD)')
 plt.grid()
-plt.savefig('MAPE_QLSEP_HCD_7methods_inc_dec.png', dpi = 600)
+plt.savefig('MAPE_QLSEP_HCD_7methods_inc_dec.png', dpi = 200)
 plt.show()
 
 """
@@ -277,7 +277,7 @@ plt.ylabel('Overall MAPE (%)')
 plt.ylim(40,70)
 #plt.title('Performance of EWMA on LCD dataset with different methods')
 plt.grid()
-plt.savefig('MAPE_EWMA_LCD_7methods.png', dpi = 600)
+plt.savefig('MAPE_EWMA_LCD_7methods.png', dpi = 200)
 plt.show()
 
 
@@ -307,7 +307,7 @@ plt.ylabel('MAPE increase/decrease (%)')
 plt.ylim(-7,7)
 #plt.title('MAPE increase/decrease from baseline (EWMA-LCD)')
 plt.grid()
-plt.savefig('MAPE_EWMA_LCD_7methods_inc_dec.png', dpi = 600)
+plt.savefig('MAPE_EWMA_LCD_7methods_inc_dec.png', dpi = 200)
 plt.show()
 
 
@@ -335,7 +335,7 @@ plt.ylabel('Overall MAPE (%)')
 plt.ylim(40,70)
 #plt.title('Performance of QLSEP on LCD dataset with different methods')
 plt.grid()
-plt.savefig('MAPE_QLSEP_LCD_7methods.png', dpi = 600)
+plt.savefig('MAPE_QLSEP_LCD_7methods.png', dpi = 200)
 plt.show()
 
 
@@ -369,6 +369,6 @@ plt.ylabel('MAPE increase/decrease (%)')
 plt.ylim(-7,7)
 #plt.title('MAPE increase/decrease from baseline (QLSEP-LCD')
 plt.grid()
-plt.savefig('MAPE_QLSEP_LCD_7methods_inc_dec.png', dpi = 600)
+plt.savefig('MAPE_QLSEP_LCD_7methods_inc_dec.png', dpi = 200)
 plt.show()
 

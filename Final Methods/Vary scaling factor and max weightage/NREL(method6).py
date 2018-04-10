@@ -130,7 +130,7 @@ ax.set_xlabel(r'$W_{max}$')
 ax.set_zlabel('MAPE')
 ax.grid()
 #plt.title(r'How MAPE varies w.r.t max weightage and scaling factor')
-plt.savefig('MAPE_vs_C_W(Method6).png',dpi=600)
+plt.savefig('MAPE_vs_C_W(Method6).png',dpi=200)
 
 
 

@@ -51,6 +51,8 @@ for x in range(0,days):
     for y in range(0,(1440/slot)):
         a.EWMA(x,y,lux_original[x-1][y])
 
+time48 = np.linspace(0,1440,num=1440/slot)
+index = 78
 
 """WCMA"""
 D = 4 #past days
@@ -132,7 +134,7 @@ plt.xlabel('Day')
 plt.ylabel('MAPE (%)')
 plt.title('90 days NREL data')
 plt.grid()
-plt.savefig('mape_vs_days.png', dpi = 600)
+plt.savefig('mape_vs_days.png', dpi = 200)
 plt.show()
 
 
@@ -156,7 +158,7 @@ plt.grid()
 
 plt.show()
 
-index = 78
+
 print EWMA_lst[index-1]
 print WCMA_lst[index-1]
 print QLSEP_lst[index-1]
@@ -165,6 +167,8 @@ print QLSEP_lst[index-1]
 print EWMA_lst[index]
 print WCMA_lst[index]
 print QLSEP_lst[index]
+
+
 
 plt.figure(1)
 fig, ax = plt.subplots(figsize=(7.5,4))
@@ -184,6 +188,7 @@ plt.xlabel('Time(Min)')
 plt.ylabel('Light Intensity (klux)')
 plt.title('Day %s (NREL data)' % str(index+1))
 plt.grid()
+plt.savefig('profiles_day79.png', dpi = 200)
 plt.show()
 
 
