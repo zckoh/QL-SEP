@@ -99,24 +99,29 @@ print "MAPE = %s%% , N = %s (Box 1)" % (mape_b1_QLSEP,no_b1_QLSEP)
 print "MAPE = %s%% , N = %s (Box 2)" % (mape_b2_QLSEP,no_b2_QLSEP)
 
 
-totalslots = np.linspace(1,days*1440/60,num=days*1440/60)
-difference = []
-for j in range(len(totalslots)):
-    difference.append(safe_div(n2_mape_lst[j],n1_mape_lst[j])*0.2)
-plt.figure(1)
-fig, ax = plt.subplots(figsize=(7.5,4))
-ax.plot(totalslots,difference,'r',label='node1')
-#ax.plot(totalslots,n2_mape_lst,'b',label= 'node2')
-legend = ax.legend(loc='upper right', shadow=True)
-frame = legend.get_frame()
-frame.set_facecolor('1.0')
-for label in legend.get_texts():
-    label.set_fontsize('medium')
-for label in legend.get_lines():
-    label.set_linewidth(1.5)  # the legend line width
-plt.xlabel('slot')
-plt.ylim([0,1])
-plt.ylabel('PER')
-plt.grid()
-plt.title('Light intensity Box 2 For 20 days')
+# =============================================================================
+# totalslots = np.linspace(1,days*1440/60,num=days*1440/60)
+# difference = []
+# for j in range(len(totalslots)):
+#     difference.append(safe_div(n2_mape_lst[j],n1_mape_lst[j])*0.2)
+# plt.figure(1)
+# fig, ax = plt.subplots(figsize=(7.5,4))
+# ax.plot(totalslots,difference,'r',label='node1')
+# #ax.plot(totalslots,n2_mape_lst,'b',label= 'node2')
+# legend = ax.legend(loc='upper right', shadow=True)
+# frame = legend.get_frame()
+# frame.set_facecolor('1.0')
+# for label in legend.get_texts():
+#     label.set_fontsize('medium')
+# for label in legend.get_lines():
+#     label.set_linewidth(1.5)  # the legend line width
+# plt.xlabel('slot')
+# plt.ylim([0,1])
+# plt.ylabel('PER')
+# plt.grid()
+# plt.title('Light intensity Box 2 For 20 days')
+# =============================================================================
 
+print "Index = 17"
+print node1.QLSEP_val[17]
+print lux_B1_even[17]

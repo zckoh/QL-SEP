@@ -42,11 +42,14 @@ for x in range(len(lux_original)):
     lux_B2.append(odd)
     
     
+
+
+C = 0.2
+W = 1.0
+
+
 node1 = QLSEP_node(0.001,0.1,3,60,days,50)
 node2 = QLSEP_node(0.001,0.1,3,60,days,50)
-
-param = 0.3
-
 for x in range(0,days):
     for y in range(0,1440/60):        
         node1.EWMA(x,y,lux_B1[x-1][y])
@@ -58,16 +61,16 @@ for x in range(0,days):
         node2.Calculate_PER(x,y,lux_B2[x][y-1],(np.amax(lux_B2[x])*0.03))
         node2.Q_val_update(x,y)
         node2.QLSEP_prediction(x,y)
-        
+    
         """Now node 2 sends node 1 (PER_previous and the updated Q-val)"""
         """now target node checks the PER"""
         """if node2's PER > target node's PER"""
-        ratio = param*safe_div(node1.PER_previous,node2.PER_previous)
-        if(ratio>0.8):
-            ratio = 0.8
+        ratio = C*safe_div(node1.PER_previous,node2.PER_previous)
+        if(ratio>W):
+            ratio = W
         elif(ratio<0):
             ratio=0
-        node1.q_values[y]=(0.8-ratio)*node2.q_values[y]+(0.2+ratio)*node1.q_values[y]
+        node1.q_values[y]=(W-ratio)*node2.q_values[y]+((1-W)+ratio)*node1.q_values[y]
         #node1.q_values[y]=0.5*node1.q_values[y] + 0.5*node2.q_values[y]
         node1.QLSEP_prediction(x,y)
         
@@ -76,7 +79,7 @@ for x in range(0,days):
 
 [mape_b2_QLSEP, no_b2_QLSEP] = MAPE_overall(lux_B2,node2.QLSEP_val,days)
 [mape_b2_EWMA, no_b2_EWMA] = MAPE_overall(lux_B2,node2.EWMA_val,days)
-
+    
 
 print "==================================="
 print "METHOD 4 - Sharing Q-Values (NREL)"
@@ -89,3 +92,50 @@ print "MAPE = %s%% , N = %s (Box 2)" % (mape_b2_EWMA,no_b2_EWMA)
 print "QLSEP prediction"
 print "MAPE = %s%% , N = %s (Box 1)" % (mape_b1_QLSEP,no_b1_QLSEP)
 print "MAPE = %s%% , N = %s (Box 2)" % (mape_b2_QLSEP,no_b2_QLSEP)
+
+
+
+print "Index = 29"
+print node1.QLSEP_val[29]
+
+#==============================================================================
+# 
+# plt.figure(1)
+# fig, ax = plt.subplots(figsize=(7,4))
+# ax.plot(m_w_lst,MAPE_QLSEP_lst,'b',label= 'QLSEP')
+# 
+# legend = ax.legend(loc='upper right', shadow=True)
+# frame = legend.get_frame()
+# frame.set_facecolor('1.0')
+# for label in legend.get_texts():
+#     label.set_fontsize('medium')
+# for label in legend.get_lines():
+#     label.set_linewidth(1.5)  # the legend line width
+# plt.xlabel('max weightage')
+# plt.ylabel('MAPE (%)')
+# plt.grid()
+# plt.title(r'How MAPE varies w.r.t max weightage')
+# 
+#==============================================================================
+# =============================================================================
+# index = 29
+# 
+# time24 = np.linspace(0,1440,num=1440/slot/2)
+# 
+# plt.figure(1)
+# fig, ax = plt.subplots(figsize=(7,4))
+# ax.plot(time24,lux_B1[index],'g',label= 'Actual')
+# ax.plot(time24,node1.QLSEP_val[index],'b',label= 'QLSEP')
+# 
+# 
+# legend = ax.legend(loc='upper right', shadow=True)
+# frame = legend.get_frame()
+# frame.set_facecolor('1.0')
+# for label in legend.get_texts():
+#     label.set_fontsize('medium')
+# for label in legend.get_lines():
+#     label.set_linewidth(1.5)  # the legend line width
+# plt.ylabel('Light Intensity (klux)')
+# plt.xlabel('time (min)')
+# plt.grid()
+# =============================================================================
