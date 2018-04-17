@@ -49,7 +49,7 @@ methods = np.linspace(1,7,num=7)
 QLSEP_change_same_NREL = []
 for j in range(1,len(QLSEP_MAPE_NREL)):
     QLSEP_change_same_NREL.append((QLSEP_MAPE_NREL[j]-QLSEP_MAPE_NREL[0]))
-      
+    print (QLSEP_MAPE_NREL[j]-QLSEP_MAPE_NREL[0])
 six_methods = np.linspace(2,7,num=6)
 
 
