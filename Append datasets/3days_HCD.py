@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Apr 15 23:01:46 2018
+Created on Mon Apr 23 23:06:29 2018
 
 @author: zckoh
 """
@@ -40,37 +40,33 @@ for i in range(1,21):
 days = len(lux_B1)
 
 
-#split into 2 arrays  (Box 1)
-lux_B1_even = []
-lux_B2_odd = []
-for x in range(len(lux_B1)):
-    even = lux_B1[x][0:][::2]
-    lux_B1_even.append(even)
-    odd = lux_B2[x][1::][::2]
-    lux_B2_odd.append(odd)
-    
-    
-time = np.linspace(0,1440,num=1440/slot)
 
+index = 10
+"""Combine 3 days"""
+B1_3day = []
+B2_3day = []
+
+for x in range(3):
+    for slt in range(1440/slot):
+        B1_3day.append(lux_B1[index+x][slt])
+        B2_3day.append(lux_B2[index+x][slt])
+
+time = np.linspace(0,1440*3,num=1440*3/slot)
 plt.figure(1)
-fig, ax = plt.subplots(figsize=(7,4))
-for n in range(days):
-    ax.plot(time,lux_B1[n])
+fig, ax = plt.subplots(figsize=(15,4))
+ax.plot(time,B1_3day,'g',label = 'Box 1')
+ax.plot(time,B2_3day,'r',label = 'Box 2')
+
+legend = ax.legend(loc='upper right', shadow=True)
+frame = legend.get_frame()
+frame.set_facecolor('1.0')
+for label in legend.get_texts():
+    label.set_fontsize('medium')
+for label in legend.get_lines():
+    label.set_linewidth(1.5)  # the legend line width
+
 plt.ylabel('Light Intensity (klux)')
 plt.xlabel('time (min)')
+plt.ylim([0,9])
 plt.grid()
-plt.xlim([400,1100])
-plt.savefig('HCD_dataset_B1.png', dpi = 200)
-
-
-
-plt.figure(2)
-fig, ax = plt.subplots(figsize=(7,4))
-for n in range(days):
-    ax.plot(time,lux_B2[n])
-plt.ylabel('Light Intensity (klux)')
-plt.xlabel('time (min)')
-plt.grid()
-plt.xlim([400,1100])
-plt.savefig('HCD_dataset_B2.png', dpi = 200)
-
+plt.savefig('HCD_3day.png', dpi = 200)

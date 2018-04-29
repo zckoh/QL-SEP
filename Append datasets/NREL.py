@@ -51,5 +51,6 @@ for n in range(days):
 plt.ylabel('Light Intensity (klux)')
 plt.xlabel('time (min)')
 plt.grid()
+plt.xlim([250,1200])
 plt.savefig('NREL_dataset.png', dpi = 200)
 
